@@ -3,7 +3,7 @@ package dev.endoy.minecraft.helpers.database.query.table;
 import dev.endoy.minecraft.helpers.database.definitions.ColumnDataType;
 import dev.endoy.minecraft.helpers.database.definitions.ColumnDefinition;
 import dev.endoy.minecraft.helpers.database.definitions.ConstraintDefinition;
-import dev.endoy.minecraft.helpers.database.definitions.DefaultValues;
+import dev.endoy.minecraft.helpers.database.definitions.SqlValue;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class ColumnQueryBuilder
     private int maxLength;
     private int decimalSize;
     private List<ConstraintDefinition> constraints = new ArrayList<>();
-    private DefaultValues defaultValue;
+    private SqlValue defaultSqlValue;
 
     public ColumnQueryBuilder name( String columnName )
     {
@@ -56,9 +56,9 @@ public class ColumnQueryBuilder
         return this;
     }
 
-    public ColumnQueryBuilder defaultValue( DefaultValues defaultValue )
+    public ColumnQueryBuilder defaultValue( SqlValue defaultSqlValue )
     {
-        this.defaultValue = defaultValue;
+        this.defaultSqlValue = defaultSqlValue;
         return this;
     }
 
@@ -70,7 +70,7 @@ public class ColumnQueryBuilder
             maxLength,
             decimalSize,
             constraints,
-            defaultValue
+            defaultSqlValue
         ) );
     }
 }

@@ -2,14 +2,14 @@ package dev.endoy.minecraft.helpers.database.dialect;
 
 import dev.endoy.minecraft.helpers.database.definitions.ColumnDataType;
 import dev.endoy.minecraft.helpers.database.SQLDialect;
-import dev.endoy.minecraft.helpers.database.definitions.DefaultValues;
+import dev.endoy.minecraft.helpers.database.definitions.SqlValue;
 
 public class MySQLDialect extends SQLDialect
 {
 
     public MySQLDialect()
     {
-        defaultValueMappings.put( DefaultValues.currentTimestamp(), "CURRENT_TIMESTAMP" );
+        defaultValueMappings.put( SqlValue.currentTimestamp(), "CURRENT_TIMESTAMP" );
 
         literalValueMappers.put( Boolean.class, value -> (boolean) value ? "1" : "0" );
         literalValueMappers.put( String.class, value -> "'" + value + "'" );

@@ -15,7 +15,7 @@ public class ColumnDefinition
     private final int maxLength;
     private final int decimalSize;
     private final List<ConstraintDefinition> constraints;
-    private final DefaultValues defaultValue;
+    private final SqlValue defaultSqlValue;
 
     public ColumnDefinition( String name, ColumnDataType dataType, int maxLength )
     {

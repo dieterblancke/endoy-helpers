@@ -2,6 +2,7 @@ package dev.endoy.minecraft.helpers.database.query;
 
 import dev.endoy.minecraft.helpers.database.DialectType;
 import dev.endoy.minecraft.helpers.database.SQLDialect;
+import dev.endoy.minecraft.helpers.database.query.select.SelectQueryBuilder;
 import dev.endoy.minecraft.helpers.database.query.table.TableQueryBuilder;
 
 public class QueryBuilder
@@ -22,5 +23,10 @@ public class QueryBuilder
     public TableQueryBuilder createTable()
     {
         return new TableQueryBuilder( dialect );
+    }
+
+    public SelectQueryBuilder select()
+    {
+        return new SelectQueryBuilder( dialect );
     }
 }

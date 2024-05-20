@@ -3,8 +3,8 @@ package dev.endoy.minecraft.helpers.database;
 import dev.endoy.minecraft.helpers.database.definitions.ColumnDataType;
 import dev.endoy.minecraft.helpers.database.definitions.ColumnDefinition;
 import dev.endoy.minecraft.helpers.database.definitions.ConstraintDefinition;
-import dev.endoy.minecraft.helpers.database.definitions.DefaultValues;
-import dev.endoy.minecraft.helpers.database.definitions.DefaultValues.LiteralDefaultValue;
+import dev.endoy.minecraft.helpers.database.definitions.SqlValue;
+import dev.endoy.minecraft.helpers.database.definitions.SqlValue.LiteralSqlValue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public abstract class SQLDialect
 {
 
-    protected Map<DefaultValues, String> defaultValueMappings = new HashMap<>();
+    protected Map<SqlValue, String> defaultValueMappings = new HashMap<>();
     protected Map<Class<?>, Function<Object, String>> literalValueMappers = new HashMap<>();
     protected Map<ColumnDataType, String> columnDataTypeMappings = new HashMap<>();
 
@@ -62,9 +62,9 @@ public abstract class SQLDialect
                 .forEach( it -> createTableQueryBuilder.append( " " )
                     .append( it.buildConstraint( column.getName() ) ) );
 
-            if ( column.getDefaultValue() != null )
+            if ( column.getDefaultSqlValue() != null )
             {
-                String defaultValue = mapDefaultValue( column.getDefaultValue() );
+                String defaultValue = mapDefaultValue( column.getDefaultSqlValue() );
 
                 if ( defaultValue != null )
                 {
@@ -97,16 +97,16 @@ public abstract class SQLDialect
         return createTableQueryBuilder.toString();
     }
 
-    public String mapDefaultValue( DefaultValues defaultValue )
+    public String mapDefaultValue( SqlValue defaultSqlValue )
     {
-        if ( defaultValue instanceof LiteralDefaultValue literalDefaultValue )
+        if ( defaultSqlValue instanceof LiteralSqlValue literalDefaultValue )
         {
             return literalValueMappers.getOrDefault( literalDefaultValue.getDefaultValue().getClass(), String::valueOf )
                 .apply( literalDefaultValue.getDefaultValue() );
         }
         else
         {
-            return defaultValueMappings.get( defaultValue );
+            return defaultValueMappings.get( defaultSqlValue );
         }
     }
 }

@@ -2,7 +2,7 @@ package dev.endoy.minecraft.helpers.database.query.table;
 
 import dev.endoy.minecraft.helpers.database.DialectType;
 import dev.endoy.minecraft.helpers.database.definitions.ColumnDataType;
-import dev.endoy.minecraft.helpers.database.definitions.DefaultValues;
+import dev.endoy.minecraft.helpers.database.definitions.SqlValue;
 import dev.endoy.minecraft.helpers.database.query.QueryBuilder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -70,7 +70,7 @@ class TableQueryBuilderTest
             .addColumn().name( "price" ).type( ColumnDataType.DECIMAL ).maxLength( 10 ).decimalSize( 2 )
             .addConstraint().notNull().addConstraint().unique()
             .and()
-            .addColumn().name( "is_active" ).type( ColumnDataType.BOOLEAN ).defaultValue( DefaultValues.literal( true ) )
+            .addColumn().name( "is_active" ).type( ColumnDataType.BOOLEAN ).defaultValue( SqlValue.literal( true ) )
             .addConstraint().notNull().addConstraint().unique()
             .and()
             .addColumn().name( "created_at" ).type( ColumnDataType.TIMESTAMP )
@@ -83,9 +83,9 @@ class TableQueryBuilderTest
             .addConstraint().notNull().addConstraint().unique()
             .and()
             .addColumn().name( "default_value" ).type( ColumnDataType.VARCHAR ).maxLength( 255 )
-            .addConstraint().notNull().defaultValue( DefaultValues.literal( "default" ) )
+            .addConstraint().notNull().defaultValue( SqlValue.literal( "default" ) )
             .and()
-            .addColumn().name( "current_timestamp" ).type( ColumnDataType.TIMESTAMP ).defaultValue( DefaultValues.currentTimestamp() )
+            .addColumn().name( "current_timestamp" ).type( ColumnDataType.TIMESTAMP ).defaultValue( SqlValue.currentTimestamp() )
             .addConstraint().notNull()
             .and()
             .build();
