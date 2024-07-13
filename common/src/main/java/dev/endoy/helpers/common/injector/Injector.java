@@ -335,6 +335,8 @@ public class Injector
                 this.checkForCircularDependencies( parameter.getType(), visitedDependencies );
             }
         }
+
+        visitedDependencies.remove(clazz);
     }
 
     private boolean isInjectable( Class<?> clazz )
