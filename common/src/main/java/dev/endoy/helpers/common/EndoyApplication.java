@@ -1,5 +1,8 @@
 package dev.endoy.helpers.common;
 
+import dev.endoy.helpers.common.command.CommandManager;
+import dev.endoy.helpers.common.command.SimpleCommand;
+import dev.endoy.helpers.common.command.SimpleTabComplete;
 import dev.endoy.helpers.common.configuration.ConfigurationManager;
 import dev.endoy.helpers.common.injector.Injector;
 import dev.endoy.helpers.common.task.TaskManager;
@@ -19,6 +22,8 @@ public abstract class EndoyApplication
     }
 
     public abstract TaskManager getTaskManager();
+
+    public abstract CommandManager<? extends SimpleCommand<?>, ? extends SimpleTabComplete<?>> getCommandManager();
 
     public abstract File getDataFolder();
 

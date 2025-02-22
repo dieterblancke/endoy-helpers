@@ -153,4 +153,34 @@ public class ReflectionUtils
             return null;
         }
     }
+
+    public static Field getField( Class<?> clazz, String name )
+    {
+        try
+        {
+            Field field = clazz.getDeclaredField( name );
+            field.setAccessible( true );
+            return field;
+        }
+        catch ( Exception e )
+        {
+            LOGGER.error( "Failed to get field: " + name + " in class: " + clazz.getName(), e );
+        }
+        return null;
+    }
+
+    public static boolean hasField( final Class<?> clazz, final String name )
+    {
+        try
+        {
+            final Field field = clazz.getDeclaredField( name );
+            field.setAccessible( true );
+            return true;
+        }
+        catch ( Exception e )
+        {
+            return false;
+        }
+    }
+
 }

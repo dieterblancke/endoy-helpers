@@ -1,15 +1,21 @@
 package dev.endoy.helpers.bungee;
 
+import dev.endoy.helpers.bungee.command.BungeeCommandManager;
 import dev.endoy.helpers.bungee.task.BungeeTaskManager;
 import dev.endoy.helpers.common.EndoyApplication;
+import dev.endoy.helpers.common.command.CommandManager;
+import dev.endoy.helpers.common.command.SimpleCommand;
+import dev.endoy.helpers.common.command.SimpleTabComplete;
 import dev.endoy.helpers.common.injector.Injector;
 import dev.endoy.helpers.common.task.TaskManager;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.event.EventHandler;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class BungeeEndoyApplication extends EndoyApplication
 {
@@ -18,6 +24,7 @@ public class BungeeEndoyApplication extends EndoyApplication
     @Getter
     private final Injector injector;
     private final BungeeTaskManager bungeeTaskManager;
+    private final BungeeCommandManager bungeeCommandManager;
     @Getter
     private final Plugin plugin;
 
@@ -28,6 +35,7 @@ public class BungeeEndoyApplication extends EndoyApplication
         this.plugin = plugin;
         this.currentClass = clazz;
         this.bungeeTaskManager = new BungeeTaskManager( plugin );
+        this.bungeeCommandManager = new BungeeCommandManager( plugin );
 
         this.injector = Injector.forProject( this.currentClass, this );
         this.registerDefaultInjectables();
@@ -45,6 +53,12 @@ public class BungeeEndoyApplication extends EndoyApplication
     }
 
     @Override
+    public CommandManager<? extends SimpleCommand<?>, ? extends SimpleTabComplete<?>> getCommandManager()
+    {
+        return bungeeCommandManager;
+    }
+
+    @Override
     public File getDataFolder()
     {
         return this.plugin.getDataFolder();
@@ -53,6 +67,18 @@ public class BungeeEndoyApplication extends EndoyApplication
     @Override
     public void registerListeners( Object listenersInstance )
     {
+        if ( !Listener.class.isAssignableFrom( listenersInstance.getClass() ) )
+        {
+            // TODO: replace with logger
+            System.out.println( "Class " + listenersInstance.getClass().getName() + " was skipped as it does not Implement Listener Class" );
+            return;
+        }
+        if ( Arrays.stream( listenersInstance.getClass().getMethods() ).noneMatch( method -> method.isAnnotationPresent( EventHandler.class ) ) )
+        {
+            // TODO: replace with logger
+            System.out.println( "Class " + listenersInstance.getClass().getName() + " was skipped as it does not have any methods with @EventHandler annotation." );
+            return;
+        }
         ProxyServer.getInstance().getPluginManager().registerListener( this.plugin, (Listener) listenersInstance );
     }
 
@@ -66,7 +92,8 @@ public class BungeeEndoyApplication extends EndoyApplication
         this.injector.registerInjectable( plugin.getClass(), plugin );
     }
 
-    public void inject() {
+    public void inject()
+    {
         this.injector.inject();
     }
 }

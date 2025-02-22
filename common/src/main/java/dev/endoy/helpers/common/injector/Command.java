@@ -10,6 +10,12 @@ import java.lang.annotation.Target;
 public @interface Command
 {
 
-    // TODO: Implement this annotation
+    String command();
+
+    String[] aliases() default {};
+
+    String permission();
+
+    boolean override() default true;
 
 }

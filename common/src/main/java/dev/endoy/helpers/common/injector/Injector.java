@@ -2,6 +2,8 @@ package dev.endoy.helpers.common.injector;
 
 import dev.endoy.configuration.api.IConfiguration;
 import dev.endoy.helpers.common.EndoyApplication;
+import dev.endoy.helpers.common.command.CommandManager;
+import dev.endoy.helpers.common.command.SimpleTabComplete;
 import dev.endoy.helpers.common.task.TaskExecutionException;
 import dev.endoy.helpers.common.utils.ReflectionUtils;
 import lombok.Getter;
@@ -102,13 +104,23 @@ public class Injector
             } );
     }
 
+    @SuppressWarnings( "unchecked" )
     private void initializeCommands()
     {
-        // TODO: perhaps change this to a type similar to Tasks?
-//        this.initializeInjectablesOfType( Command.class, commands ->
-//        {
-//            // TODO: implement
-//        } );
+        this.initializeInjectablesOfType( Command.class, commands -> commands.forEach( command ->
+        {
+            Command commandAnnotation = command.annotation();
+            CommandManager commandManager = endoyApplication.getCommandManager();
+
+            commandManager.registerCommand(
+                commandAnnotation.command(),
+                List.of( commandAnnotation.aliases() ),
+                commandAnnotation.permission(),
+                command.instance(),
+                command.instance() instanceof SimpleTabComplete ? command.instance() : null,
+                commandAnnotation.override()
+            );
+        } ) );
     }
 
     private void initializeListeners()
