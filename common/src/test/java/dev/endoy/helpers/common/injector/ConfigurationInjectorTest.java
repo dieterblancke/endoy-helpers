@@ -13,7 +13,9 @@ import org.mockito.MockedStatic;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mockStatic;
@@ -62,6 +64,14 @@ class ConfigurationInjectorTest extends EndoyApplicationTest
             new File( dataFolder, "config-with-transform.yml" ).toPath(),
             """
                 test: testing
+                """
+        );
+        Files.writeString(
+            new File( dataFolder, "config-with-map.yml" ).toPath(),
+            """
+                test:
+                  test: test
+                  test-nr: 123
                 """
         );
     }
@@ -183,6 +193,28 @@ class ConfigurationInjectorTest extends EndoyApplicationTest
         }
     }
 
+    @Test
+    void testWithMap()
+    {
+        try ( MockedStatic<ReflectionUtils> reflectionUtils = mockStatic( ReflectionUtils.class ) )
+        {
+            reflectionUtils.when( () -> ReflectionUtils.getClassesInPackage( this.getClass() ) )
+                .thenReturn( List.of(
+                    TestConfigurationWithMap.class
+                ) );
+
+            TestHelper.callRealMethods( reflectionUtils );
+            Injector injector = Injector.forProject( this.getClass(), this );
+            this.setInjector( injector );
+            injector.inject();
+
+            TestConfigurationWithMap testConfiguration = injector.getInjectableInstance( TestConfigurationWithMap.class );
+            assertEquals( 2, testConfiguration.getTest().size() );
+            assertEquals( "test", testConfiguration.getTest().get( "test" ) );
+            assertEquals( 123, testConfiguration.getTest().get( "test-nr" ) );
+        }
+    }
+
     public enum TestEnum
     {
         TEST, TESTING
@@ -260,6 +292,16 @@ class ConfigurationInjectorTest extends EndoyApplicationTest
         @Value
         @TransformValue( value = TestTransform.class )
         private final TransformedTest test = new TransformedTest( "testing" );
+
+    }
+
+    @Getter
+    @Configuration( filePath = "config-with-map.yml" )
+    public static class TestConfigurationWithMap
+    {
+
+        @Value
+        private final Map<String, Object> test = new HashMap<>();
 
     }
 

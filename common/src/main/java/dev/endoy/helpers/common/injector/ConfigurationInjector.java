@@ -2,6 +2,7 @@ package dev.endoy.helpers.common.injector;
 
 import dev.endoy.configuration.api.FileStorageType;
 import dev.endoy.configuration.api.IConfiguration;
+import dev.endoy.configuration.api.ISection;
 import dev.endoy.helpers.common.EndoyApplication;
 import dev.endoy.helpers.common.configuration.ValueTransformerRegistry;
 import dev.endoy.helpers.common.transform.TransformValue;
@@ -14,6 +15,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class ConfigurationInjector
@@ -153,6 +156,17 @@ public class ConfigurationInjector
         if ( field.getType().isEnum() )
         {
             configValue = Enum.valueOf( (Class<Enum>) field.getType(), String.valueOf( configValue ) );
+        }
+        else if ( Map.class.isAssignableFrom( field.getType() ) && configValue instanceof ISection section )
+        {
+            Map<String, Object> mapInstance = field.getType().isInterface() ? new HashMap<>() : (Map<String, Object>) field.getType().getDeclaredConstructor().newInstance();
+
+            for ( String key : section.getKeys() )
+            {
+                mapInstance.put( key, section.get( key ) );
+            }
+
+            configValue = mapInstance;
         }
         else if ( field.isAnnotationPresent( TransformValue.class ) )
         {
