@@ -6,7 +6,7 @@
 
     <groupId>dev.endoy.helpers</groupId>
     <artifactId>helpers</artifactId>
-    <version>0.0.39</version>
+    <version>0.0.40</version>
     <packaging>pom</packaging>
     <modules>
         <module>common</module>
