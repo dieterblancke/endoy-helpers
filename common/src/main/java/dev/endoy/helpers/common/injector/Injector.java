@@ -78,6 +78,7 @@ public class Injector
         this.validateInjectableConstructors();
 
         this.configurationInjector.inject();
+        this.initializeBeans();
         this.initializeCommands();
         this.initializeListeners();
         this.initializeComponents();
@@ -102,6 +103,39 @@ public class Injector
                     throw new InvalidInjectionContextException( "Injectable class must have exactly one constructor: " + clazz.getName() );
                 }
             } );
+    }
+
+    private void initializeBeans()
+    {
+        this.initializeInjectablesOfType( Beans.class, beans -> beans.forEach( bean ->
+        {
+            Arrays.stream( bean.instance().getClass().getDeclaredMethods() )
+                .filter( it -> it.isAnnotationPresent( Bean.class ) )
+                .filter( it -> it.getParameters().length == 0 || Arrays.stream( it.getParameters() ).allMatch( param -> this.isInjectable( param.getType() ) ) )
+                .forEach( method ->
+                {
+                    try
+                    {
+                        method.setAccessible( true );
+                        Object value = method.invoke(
+                            bean.instance(),
+                            Arrays.stream( method.getParameters() )
+                                .map( parameter -> this.findOrRegisterInjectable( parameter.getType() ) )
+                                .toArray()
+                        );
+
+                        if ( value != null )
+                        {
+                            this.registerInjectable( value.getClass(), value );
+                        }
+                        method.setAccessible( false );
+                    }
+                    catch ( Exception e )
+                    {
+                        throw new BeanException( "Failed to create bean: " + method.getName() + " in class " + bean.instance().getClass().getName(), e );
+                    }
+                } );
+        } ) );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -263,25 +297,7 @@ public class Injector
             {
                 try
                 {
-                    Class<?> fieldClass = field.getType();
-
-                    if ( this.isInterfaceOrAbstract( fieldClass ) && this.isInjectable( fieldClass ) )
-                    {
-                        fieldClass = this.getInjectableClassFromParentClass( fieldClass );
-                    }
-
-                    Object value;
-
-                    if ( this.injectables.containsKey( fieldClass ) )
-                    {
-                        value = this.injectables.get( fieldClass );
-                    }
-                    else
-                    {
-                        value = this.initializeInjectable( field.getType() );
-                    }
-
-                    ReflectionUtils.setFieldValue( field, instance, value );
+                    ReflectionUtils.setFieldValue( field, instance, this.findOrRegisterInjectable( field.getType() ) );
                 }
                 catch ( Exception e )
                 {
@@ -397,7 +413,7 @@ public class Injector
 
     private List<Class<? extends Annotation>> getInjectableAnnotations()
     {
-        return List.of( Configuration.class, Command.class, Listeners.class, Component.class, Manager.class, Service.class, Task.class );
+        return List.of( Configuration.class, Beans.class, Command.class, Listeners.class, Component.class, Manager.class, Service.class, Task.class );
     }
 
     private boolean checkConditionals( Class<?> clazz )
@@ -434,6 +450,29 @@ public class Injector
             .filter( entry -> entry.getKey().isAnnotationPresent( annotation ) )
             .map( Entry::getValue )
             .collect( Collectors.toList() );
+    }
+
+    private Object findOrRegisterInjectable( Class<?> clazz )
+    {
+        Class<?> mappedClass = clazz;
+
+        if ( this.isInterfaceOrAbstract( mappedClass ) && this.isInjectable( mappedClass ) )
+        {
+            mappedClass = this.getInjectableClassFromParentClass( mappedClass );
+        }
+
+        Object value;
+
+        if ( this.injectables.containsKey( mappedClass ) )
+        {
+            value = this.injectables.get( mappedClass );
+        }
+        else
+        {
+            value = this.initializeInjectable( clazz );
+        }
+
+        return value;
     }
 
     record InjectedType<T>(T annotation, Object instance)

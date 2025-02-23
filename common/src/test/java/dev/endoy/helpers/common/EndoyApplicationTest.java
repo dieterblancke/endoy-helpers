@@ -1,5 +1,8 @@
 package dev.endoy.helpers.common;
 
+import dev.endoy.helpers.common.command.CommandManager;
+import dev.endoy.helpers.common.command.SimpleCommand;
+import dev.endoy.helpers.common.command.SimpleTabComplete;
 import dev.endoy.helpers.common.injector.Injector;
 import dev.endoy.helpers.common.task.ScheduledTask;
 import dev.endoy.helpers.common.task.TaskManager;
@@ -84,6 +87,15 @@ public class EndoyApplicationTest extends EndoyApplication
                 {
                 };
             }
+        };
+    }
+
+    @Override
+    public CommandManager<? extends SimpleCommand<?>, ? extends SimpleTabComplete<?>> getCommandManager()
+    {
+        return (CommandManager<SimpleCommand<?>, SimpleTabComplete<?>>) ( command, aliases, permission, simpleCommand, tabComplete, override ) ->
+        {
+
         };
     }
 
