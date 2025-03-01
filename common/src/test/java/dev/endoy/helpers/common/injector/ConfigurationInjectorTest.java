@@ -2,6 +2,10 @@ package dev.endoy.helpers.common.injector;
 
 import dev.endoy.helpers.common.EndoyApplicationTest;
 import dev.endoy.helpers.common.TestHelper;
+import dev.endoy.helpers.common.injector.annotations.Comment;
+import dev.endoy.helpers.common.injector.annotations.Configuration;
+import dev.endoy.helpers.common.injector.annotations.ConfigurationSection;
+import dev.endoy.helpers.common.injector.annotations.Value;
 import dev.endoy.helpers.common.transform.TransformValue;
 import dev.endoy.helpers.common.transform.ValueTransformer;
 import dev.endoy.helpers.common.utils.ReflectionUtils;

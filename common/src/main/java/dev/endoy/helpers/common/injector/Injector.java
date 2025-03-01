@@ -4,6 +4,8 @@ import dev.endoy.configuration.api.IConfiguration;
 import dev.endoy.helpers.common.EndoyApplication;
 import dev.endoy.helpers.common.command.CommandManager;
 import dev.endoy.helpers.common.command.SimpleTabComplete;
+import dev.endoy.helpers.common.injector.annotations.*;
+import dev.endoy.helpers.common.injector.exceptions.*;
 import dev.endoy.helpers.common.task.TaskExecutionException;
 import dev.endoy.helpers.common.utils.ReflectionUtils;
 import lombok.Getter;
@@ -58,11 +60,11 @@ public class Injector
             }
         }
 
-        for ( Class<?> interfaze : clazz.getInterfaces() )
+        for ( Class<?> interfaceClass : clazz.getInterfaces() )
         {
-            if ( !this.injectables.containsKey( interfaze ) )
+            if ( !this.injectables.containsKey( interfaceClass ) )
             {
-                this.injectables.put( interfaze, instance );
+                this.injectables.put( interfaceClass, instance );
             }
         }
     }

@@ -2,6 +2,9 @@ package dev.endoy.helpers.common.injector;
 
 import dev.endoy.helpers.common.EndoyApplicationTest;
 import dev.endoy.helpers.common.TestHelper;
+import dev.endoy.helpers.common.injector.annotations.Bean;
+import dev.endoy.helpers.common.injector.annotations.Beans;
+import dev.endoy.helpers.common.injector.annotations.Component;
 import dev.endoy.helpers.common.utils.ReflectionUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

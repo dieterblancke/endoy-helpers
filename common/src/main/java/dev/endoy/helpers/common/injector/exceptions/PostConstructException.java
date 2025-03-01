@@ -1,4 +1,4 @@
-package dev.endoy.helpers.common.injector;
+package dev.endoy.helpers.common.injector.exceptions;
 
 public class PostConstructException extends RuntimeException
 {

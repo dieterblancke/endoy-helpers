@@ -5,7 +5,7 @@ import com.cronutils.model.CronType;
 import com.cronutils.model.definition.CronDefinitionBuilder;
 import com.cronutils.model.time.ExecutionTime;
 import com.cronutils.parser.CronParser;
-import dev.endoy.helpers.common.injector.Task;
+import dev.endoy.helpers.common.injector.annotations.Task;
 
 import java.time.ZonedDateTime;
 import java.util.concurrent.TimeUnit;

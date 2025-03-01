@@ -2,6 +2,8 @@ package dev.endoy.helpers.common.injector;
 
 import dev.endoy.helpers.common.EndoyApplicationTest;
 import dev.endoy.helpers.common.TestHelper;
+import dev.endoy.helpers.common.injector.annotations.Component;
+import dev.endoy.helpers.common.injector.annotations.PostConstruct;
 import dev.endoy.helpers.common.utils.ReflectionUtils;
 import lombok.Value;
 import org.junit.jupiter.api.DisplayName;

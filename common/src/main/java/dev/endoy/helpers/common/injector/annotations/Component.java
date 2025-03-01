@@ -1,4 +1,4 @@
-package dev.endoy.helpers.common.injector;
+package dev.endoy.helpers.common.injector.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,15 +7,6 @@ import java.lang.annotation.Target;
 
 @Target( ElementType.TYPE )
 @Retention( RetentionPolicy.RUNTIME )
-public @interface Command
+public @interface Component
 {
-
-    String command();
-
-    String[] aliases() default {};
-
-    String permission();
-
-    boolean override() default true;
-
 }

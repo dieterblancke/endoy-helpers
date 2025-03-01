@@ -1,4 +1,4 @@
-package dev.endoy.helpers.common.injector;
+package dev.endoy.helpers.common.injector.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

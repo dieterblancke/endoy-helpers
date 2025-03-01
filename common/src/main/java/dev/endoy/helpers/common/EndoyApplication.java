@@ -5,6 +5,7 @@ import dev.endoy.helpers.common.command.SimpleCommand;
 import dev.endoy.helpers.common.command.SimpleTabComplete;
 import dev.endoy.helpers.common.configuration.ConfigurationManager;
 import dev.endoy.helpers.common.injector.Injector;
+import dev.endoy.helpers.common.injector.annotations.Configuration;
 import dev.endoy.helpers.common.task.TaskManager;
 import lombok.Getter;
 
@@ -39,7 +40,7 @@ public abstract class EndoyApplication
     }
 
     /**
-     * This will reload all configurations that are annotated with {@link dev.endoy.helpers.common.injector.Configuration}.
+     * This will reload all configurations that are annotated with {@link Configuration}.
      *
      * It will, of course, not reload things that make use of the configuration values nor does it reload @Value fields.
      */
