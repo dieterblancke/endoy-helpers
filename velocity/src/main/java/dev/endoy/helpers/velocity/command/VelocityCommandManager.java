@@ -5,7 +5,7 @@ import dev.endoy.helpers.common.command.CommandManager;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 @RequiredArgsConstructor

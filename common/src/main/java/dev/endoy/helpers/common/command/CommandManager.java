@@ -1,6 +1,6 @@
 package dev.endoy.helpers.common.command;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public interface CommandManager<C, T>
