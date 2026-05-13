@@ -6,7 +6,7 @@
     <parent>
         <groupId>dev.endoy.helpers</groupId>
         <artifactId>helpers</artifactId>
-        <version>0.0.40</version>
+        <version>v0.0.41</version>
     </parent>
 
     <artifactId>common</artifactId>
