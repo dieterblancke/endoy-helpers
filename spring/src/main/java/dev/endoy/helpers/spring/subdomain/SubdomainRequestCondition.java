@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.servlet.mvc.condition.RequestCondition;
 
 import java.util.Set;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public class SubdomainRequestCondition implements RequestCondition<SubdomainRequestCondition>
@@ -17,7 +18,7 @@ public class SubdomainRequestCondition implements RequestCondition<SubdomainRequ
     {
         for ( String subdomain : this.subdomains )
         {
-            if ( request.getServerName().startsWith( subdomain + "." ) )
+            if ( Stream.of( request.getHeader( "X-Forwarded-Host" ), request.getHeader( "Host" ), request.getServerName() ).anyMatch( it -> it != null && it.startsWith( subdomain + "." ) ) )
             {
                 return this;
             }
